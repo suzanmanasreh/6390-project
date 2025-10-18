@@ -1,0 +1,10 @@
+name = "refinement_borrows"
+version = "0.1.0"
+defaultTargets = ["refinement_borrows"]
+
+[[lean_lib]]
+name = "RefinementBorrows"
+
+[[lean_exe]]
+name = "refinement_borrows"
+root = "Main"
