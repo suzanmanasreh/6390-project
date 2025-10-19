@@ -7,6 +7,7 @@ structure Lifetime where
   start : Nat
   finish : Nat
   sound : start ≤ finish
+  deriving Repr
 
 inductive Ty : Type where
   | unit : Ty
@@ -16,6 +17,7 @@ inductive Ty : Type where
   | arrow : Ty → Ty → Ty
   | ref : Lifetime → Ty → Ty -- NOTE: First pass, will probably delete once I read RustBelt or Oxide more closely.
   | ref_mut : Lifetime → Ty → Ty
+  deriving Repr
 
 inductive Term : Type where
   | var : String → Term
@@ -27,6 +29,7 @@ inductive Term : Type where
   | string_const : String → Term
   | if_then_else : Term → Term → Term
   -- TODO: Define constructors for `ref`
+  deriving Repr
 
 inductive Value : Term → Prop where
   | abs : ∀ x T₂ t₁,
