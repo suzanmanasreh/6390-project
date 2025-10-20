@@ -1,7 +1,7 @@
 -- Simple translation of STLC code from PLF
 
 
--- TODO: First pass at modelling a lifetime
+-- TODO: First pass at modeling a lifetime
 -- In a lambda calculus numerical program points might not make much sense
 structure Lifetime where
   start : Nat
@@ -27,7 +27,7 @@ inductive Term : Type where
   | false : Term
   | nat_const : Nat → Term
   | string_const : String → Term
-  | if_then_else : Term → Term → Term
+  | if_then_else : Term → Term → Term → Term
   -- TODO: Define constructors for `ref`
   deriving Repr
 
@@ -45,5 +45,3 @@ def owned : Ty → Prop
   | Ty.ref _ _ => False
   | Ty.ref_mut _ _ => False
   | _ => True
-
-
