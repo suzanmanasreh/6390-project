@@ -45,3 +45,31 @@ def owned : Ty → Prop
   | Ty.ref _ _ => False
   | Ty.ref_mut _ _ => False
   | _ => True
+
+-- substitute s for x in t?
+def subst (x : String) (s : Term) (t : Term) : Term :=
+  match t with
+  | Term.var y => if x = y then s else Term.var y
+  | Term.app t₁ t₂ => Term.app (subst x s t₁) (subst x s t₂)
+  | Term.abs y T t => if x = y then t else subst x s t
+  | Term.if_then_else t₁ t₂ t₃ => Term.if_then_else (subst x s t₁) (subst x s t₂) (subst x s t₃)
+  | Term.true =>  Term.true
+  | Term.false => Term.false
+  | Term.string_const s => Term.string_const s
+  | Term.nat_const n => Term.nat_const n
+
+
+def eval (t : Term) : Term :=
+  match t with
+  | Term.true => Term.true
+  | Term.false => Term.false
+  | Term.var x => Term.var x
+  | Term.nat_const n => Term.nat_const n
+  | Term.string_const s => Term.string_const s
+  | Term.abs x T t => Term.abs x T t -- I don't know
+  | Term.app t₁ t₂ => sorry
+  | Term.if_then_else t₁ t₂ t₃ =>
+    match eval t₁ with
+    | Term.true => eval t₂
+    | Term.false => eval t₃
+    | t' => Term.if_then_else t' t₂ t₃
