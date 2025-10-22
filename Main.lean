@@ -10,9 +10,12 @@ def test_if_then_else :=
 def test_if_then_else2 :=
   Term.if_then_else Term.false (Term.nat_const 1) (Term.nat_const 0)
 
+def test_subst :=
+  subst "x" (Term.nat_const 42) (Term.abs "y" Ty.bool (Term.var "x"))
 
 def main : IO Unit := do
   IO.println "Hello, Sailor!"
   IO.println (repr (eval test_term))
   IO.println (repr (eval test_if_then_else))
   IO.println (repr (eval test_if_then_else2))
+  IO.println (repr (eval test_subst))

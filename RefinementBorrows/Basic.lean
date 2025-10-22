@@ -68,7 +68,7 @@ def subst (x : String) (s : Term) (t : Term) : Term :=
   | Term.nat_const n => Term.nat_const n
 
 
-def eval (t : Term) : Term :=
+partial def eval (t : Term) : Term :=
   match t with
   | Term.true => Term.true
   | Term.false => Term.false
@@ -76,7 +76,14 @@ def eval (t : Term) : Term :=
   | Term.nat_const n => Term.nat_const n
   | Term.string_const s => Term.string_const s
   | Term.abs x T t => Term.abs x T t -- I don't know
-  | Term.app t₁ t₂ => sorry
+  -- | Term.app t₁ t₂ => sorry
+  | Term.app t₁ t₂ =>
+    match eval t₁ with
+    | Term.abs x T₁' t₁' =>
+        let v₂ := eval t₂
+        eval (subst x v₂ t₁')
+    | t₁' =>
+        Term.app t₁' (eval t₂)
   | Term.if_then_else t₁ t₂ t₃ =>
     match eval t₁ with
     | Term.true => eval t₂
