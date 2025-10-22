@@ -46,13 +46,22 @@ def owned : Ty → Prop
   | Ty.ref_mut _ _ => False
   | _ => True
 
--- substitute s for x in t?
+-- substitute s for x in t as in [x := s]t
 def subst (x : String) (s : Term) (t : Term) : Term :=
   match t with
-  | Term.var y => if x = y then s else Term.var y
-  | Term.app t₁ t₂ => Term.app (subst x s t₁) (subst x s t₂)
-  | Term.abs y T t => if x = y then t else subst x s t
-  | Term.if_then_else t₁ t₂ t₃ => Term.if_then_else (subst x s t₁) (subst x s t₂) (subst x s t₃)
+  | Term.var y =>
+      if x = y then s else Term.var y
+  | Term.app t₁ t₂ =>
+      Term.app (subst x s t₁) (subst x s t₂)
+  -- either (y:T, [y:=s] t_1), y is bound so can't substitute
+  -- or y is not bound (y:T, [x:=s] t_1)
+  | Term.abs y T t₁ =>
+      if x = y then
+        Term.abs y T t₁
+      else
+        Term.abs y T (subst x s t₁)
+  | Term.if_then_else t₁ t₂ t₃ =>
+      Term.if_then_else (subst x s t₁) (subst x s t₂) (subst x s t₃)
   | Term.true =>  Term.true
   | Term.false => Term.false
   | Term.string_const s => Term.string_const s
