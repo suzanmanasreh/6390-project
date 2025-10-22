@@ -55,11 +55,7 @@ def subst (x : String) (s : Term) (t : Term) : Term :=
       Term.app (subst x s t₁) (subst x s t₂)
   -- either (y:T, [y:=s] t_1), y is bound so can't substitute
   -- or y is not bound (y:T, [x:=s] t_1)
-  | Term.abs y T t₁ =>
-      if x = y then
-        Term.abs y T t₁
-      else
-        Term.abs y T (subst x s t₁)
+  | Term.abs y T t₁ => Term.abs y T (if x = y then t₁ else (subst x s t₁))
   | Term.if_then_else t₁ t₂ t₃ =>
       Term.if_then_else (subst x s t₁) (subst x s t₂) (subst x s t₃)
   | Term.true =>  Term.true
