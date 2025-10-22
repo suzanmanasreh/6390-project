@@ -63,6 +63,24 @@ def subst (x : String) (s : Term) (t : Term) : Term :=
   | Term.string_const s => Term.string_const s
   | Term.nat_const n => Term.nat_const n
 
+inductive Step : Term → Term → Prop where
+  | eval_appabs : ∀ x T₂ t₁ v₂,
+      Value v₂ →
+      Step (Term.app (Term.abs x T₂ t₁) v₂) (subst x v₂ t₁)
+  | eval_app1 : ∀ t₁ t₁' t₂,
+      Step t₁ t₁' →
+      Step (Term.app t₁ t₂) (Term.app t₁' t₂)
+  | eval_app2 : ∀ v₁ t₂ t₂',
+      Value v₁ →
+      Step t₂ t₂' →
+      Step (Term.app v₁ t₂) (Term.app v₁ t₂')
+  | eval_if_true : ∀ t₁ t₂,
+      Step (Term.if_then_else Term.true t₁ t₂) t₁
+  | eval_if_false : ∀ t₁ t₂,
+      Step (Term.if_then_else Term.false t₁ t₂) t₂
+  | eval_if : ∀ t₁ t₁' t₂ t₃,
+      Step t₁ t₁' →
+      Step (Term.if_then_else t₁ t₂ t₃) (Term.if_then_else t₁' t₂ t₃)
 
 partial def eval (t : Term) : Term :=
   match t with
