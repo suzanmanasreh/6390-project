@@ -66,7 +66,7 @@ def subst (x : String) (s : Term) (t : Term) : Term :=
 inductive Step : Term → Term → Prop where
   | eval_appabs : ∀ x T₂ t₁ v₂,
       Value v₂ →
-      Step (Term.app (Term.abs x T₂ t₁) v₂) (subst x v₂ t₁)
+      Step (Term.app (Term.abs x T₂ t₁) v₂) (subst x v₂ t₁) -- [x:=v2]t1
   | eval_app1 : ∀ t₁ t₁' t₂,
       Step t₁ t₁' →
       Step (Term.app t₁ t₂) (Term.app t₁' t₂)
